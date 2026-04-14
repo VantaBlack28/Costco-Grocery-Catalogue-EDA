@@ -1,4 +1,4 @@
-# Authors: Stefan Jafry, Tony Ngo, Shrivar Naidu
+## Authors: Stefan Jafry, Tony Ngo, Shrivar Naidu
 
 
 # Costco-Grocery-Catalogue-EDA
