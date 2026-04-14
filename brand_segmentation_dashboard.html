@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brand Segmentation — Costco Market Positioning</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Nunito+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #2151a1;
+    --bg2: #2b2f36;
+    --bg3: #383d46;
+    --border: rgba(255,255,255,0.08);
+    --border-hover: rgba(255,255,255,0.18);
+    --text: #e8f4fd;
+    --text2: #9bbcd4;
+    --text3: #5c7f9a;
+    --blue: #5ba3e8;
+    --blue-mid: #3a9fd6;
+    --blue-light: #93c5f5;
+    --teal: #3ec9dc;
+    --indigo: #8b9ff0;
+    --blue-dim: rgba(91,163,232,0.18);
+    --teal-dim: rgba(62,201,220,0.15);
+    --indigo-dim: rgba(139,159,240,0.15);
+    --accent: #5ba3e8;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Nunito Sans', sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    min-height: 100vh;
+    padding: 40px 32px 80px;
+  }
+
+  header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 40px;
+    padding-bottom: 24px;
+    border-bottom: 1.5px solid rgba(255,255,255,0.2);
+  }
+
+  .header-left h1 {
+    font-family: 'Nunito', sans-serif;
+    font-size: 34px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: var(--text);
+    line-height: 1.2;
+  }
+
+  .header-left p {
+    font-size: 14px;
+    color: rgba(255,255,255,0.65);
+    margin-top: 4px;
+    font-weight: 400;
+  }
+
+  .header-right {
+    font-family: 'Nunito Sans', sans-serif;
+    font-size: 12px;
+    color: rgba(255,255,255,0.4);
+    text-align: right;
+    line-height: 1.9;
+  }
+
+  .metrics {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+
+  .metric-card {
+    background: var(--bg2);
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 20px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .metric-card:hover { border-color: var(--border-hover); box-shadow: 0 4px 16px rgba(26,111,186,0.08); }
+
+  .metric-label {
+    font-size: 11px;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  .metric-value {
+    font-size: 30px;
+    font-weight: 800;
+    color: var(--blue-light);
+    font-family: 'Nunito', sans-serif;
+    letter-spacing: -0.5px;
+  }
+
+  .metric-sub {
+    font-size: 12px;
+    color: var(--text2);
+    margin-top: 2px;
+  }
+
+  .filters {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+
+  .filter-btn {
+    font-family: 'Nunito', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 7px 18px;
+    border-radius: 20px;
+    border: 1.5px solid rgba(255,255,255,0.25);
+    background: rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.75);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .filter-btn:hover { border-color: rgba(255,255,255,0.5); color: #fff; }
+
+  .filter-btn.active-all { background: rgba(255,255,255,0.22); color: #fff; border-color: rgba(255,255,255,0.5); }
+  .filter-btn.active-mass { background: rgba(91,163,232,0.25); color: #93c5f5; border-color: rgba(91,163,232,0.5); }
+  .filter-btn.active-premium { background: rgba(62,201,220,0.2); color: #3ec9dc; border-color: rgba(62,201,220,0.45); }
+  .filter-btn.active-mid { background: rgba(139,159,240,0.2); color: #b0bcf5; border-color: rgba(139,159,240,0.45); }
+
+  .main-grid {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 16px;
+    margin-bottom: 16px;
+    align-items: start;
+  }
+
+  .chart-panel {
+    background: var(--bg2);
+    border: 1.5px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+  }
+
+  .chart-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+
+  .chart-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    font-family: 'Nunito', sans-serif;
+  }
+
+  .legend {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--text2);
+    font-family: 'Nunito Sans', sans-serif;
+  }
+
+  .legend-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .chart-wrap {
+    position: relative;
+    height: 380px;
+  }
+
+  .side-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .segment-card {
+    background: var(--bg2);
+    border: 1.5px solid var(--border);
+    border-radius: 16px;
+    padding: 16px 18px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    cursor: default;
+  }
+
+  .segment-card:hover { border-color: var(--border-hover); box-shadow: 0 4px 14px rgba(26,111,186,0.07); }
+
+  .segment-card-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  .seg-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .seg-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+    font-family: 'Nunito', sans-serif;
+  }
+
+  .seg-count {
+    font-size: 12px;
+    color: var(--text3);
+    font-family: 'Nunito Sans', sans-serif;
+    margin-bottom: 10px;
+  }
+
+  .seg-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+
+  .seg-stat {
+    background: var(--bg3);
+    border-radius: 10px;
+    padding: 8px 10px;
+  }
+
+  .seg-stat-label {
+    font-size: 10px;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    margin-bottom: 2px;
+  }
+
+  .seg-stat-value {
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--text);
+    font-family: 'Nunito', sans-serif;
+  }
+
+  .table-section {
+    background: var(--bg2);
+    border: 1.5px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .table-header-row {
+    padding: 14px 20px;
+    border-bottom: 1.5px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .table-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    font-family: 'Nunito', sans-serif;
+  }
+
+  .table-count {
+    font-size: 12px;
+    color: var(--text3);
+    font-family: 'Nunito Sans', sans-serif;
+  }
+
+  .table-scroll { overflow-x: auto; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  thead th {
+    padding: 10px 16px;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text2);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg3);
+    white-space: nowrap;
+  }
+
+  thead th:not(:first-child) { text-align: right; }
+  thead th:last-child { text-align: left; }
+
+  tbody tr { border-bottom: 1px solid var(--border); transition: background 0.1s; }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: #30353e; }
+
+  td {
+    padding: 11px 16px;
+    color: var(--text2);
+    white-space: nowrap;
+  }
+
+  td:first-child { color: var(--text); font-weight: 600; text-transform: capitalize; font-family: 'Nunito', sans-serif; }
+  td:not(:first-child):not(:last-child) { text-align: right; font-family: 'Nunito Sans', sans-serif; font-size: 13px; }
+  td:last-child { text-align: left; }
+
+  .badge {
+    display: inline-block;
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .badge-mass { background: var(--blue-dim); color: var(--blue); border: 1px solid rgba(26,111,186,0.2); }
+  .badge-premium { background: var(--teal-dim); color: var(--teal); border: 1px solid rgba(14,143,160,0.2); }
+  .badge-mid { background: var(--indigo-dim); color: var(--indigo); border: 1px solid rgba(75,95,191,0.2); }
+
+  .rating-bar-wrap { display: flex; align-items: center; gap: 8px; }
+  .rating-bar {
+    width: 60px;
+    height: 4px;
+    background: var(--bg3);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .rating-bar-fill { height: 100%; border-radius: 2px; }
+
+  @media (max-width: 900px) {
+    body { padding: 24px 16px 60px; }
+    .main-grid { grid-template-columns: 1fr; }
+    .metrics { grid-template-columns: repeat(2, 1fr); }
+    header { flex-direction: column; align-items: flex-start; gap: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <h1>Brand Segmentation</h1>
+    <p>Costco market positioning — K-means clustering analysis</p>
+  </div>
+  <div class="header-right">
+    <div>31 brands · 3 segments</div>
+    <div>Features: reviews · rating · price</div>
+    <div>Model: K-Means (k=3)</div>
+  </div>
+</header>
+
+<div class="metrics">
+  <div class="metric-card">
+    <div class="metric-label">Total brands</div>
+    <div class="metric-value">31</div>
+    <div class="metric-sub">across 3 segments</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-label">Avg rating</div>
+    <div class="metric-value">4.42</div>
+    <div class="metric-sub">portfolio-wide</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-label">Total reviews</div>
+    <div class="metric-value">189.5k</div>
+    <div class="metric-sub">across all brands</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-label">Avg price</div>
+    <div class="metric-value">$130</div>
+    <div class="metric-sub">portfolio-wide</div>
+  </div>
+</div>
+
+<div class="filters">
+  <button class="filter-btn active-all" id="btn-all" onclick="setFilter('all')">All segments</button>
+  <button class="filter-btn" id="btn-mass" onclick="setFilter('Mass-Market Dominant')">Mass-market dominant</button>
+  <button class="filter-btn" id="btn-premium" onclick="setFilter('Premium High-Quality')">Premium high-quality</button>
+  <button class="filter-btn" id="btn-mid" onclick="setFilter('Mid-Tier / Lower Satisfaction')">Mid-tier / lower satisfaction</button>
+</div>
+
+<div class="main-grid">
+  <div class="chart-panel">
+    <div class="chart-panel-header">
+      <span class="chart-title">Popularity vs. quality — bubble size indicates product count</span>
+      <div class="legend">
+        <div class="legend-item"><span class="legend-dot" style="background:#5ba3e8;"></span>Mass-market dominant</div>
+        <div class="legend-item"><span class="legend-dot" style="background:#3ec9dc;"></span>Premium high-quality</div>
+        <div class="legend-item"><span class="legend-dot" style="background:#8b9ff0;"></span>Mid-tier / lower satisfaction</div>
+      </div>
+    </div>
+    <div class="chart-wrap">
+      <canvas id="bubbleChart" role="img" aria-label="Bubble chart of brand clusters by total reviews vs avg rating, bubble size shows product count."></canvas>
+    </div>
+  </div>
+
+  <div class="side-panel">
+    <div class="segment-card">
+      <div class="segment-card-header">
+        <span class="seg-dot" style="background:#5ba3e8;"></span>
+        <span class="seg-name">Mass-market dominant</span>
+      </div>
+      <div class="seg-count">1 brand · 281 products</div>
+      <div class="seg-stats">
+        <div class="seg-stat">
+          <div class="seg-stat-label">Avg rating</div>
+          <div class="seg-stat-value" style="color:#5ba3e8;">4.60</div>
+        </div>
+        <div class="seg-stat">
+          <div class="seg-stat-label">Reviews</div>
+          <div class="seg-stat-value">63.7k</div>
+        </div>
+        <div class="seg-stat" style="grid-column:1/-1;">
+          <div class="seg-stat-label">Avg price</div>
+          <div class="seg-stat-value">$20.68</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="segment-card">
+      <div class="segment-card-header">
+        <span class="seg-dot" style="background:#3ec9dc;"></span>
+        <span class="seg-name">Premium high-quality</span>
+      </div>
+      <div class="seg-count">17 brands</div>
+      <div class="seg-stats">
+        <div class="seg-stat">
+          <div class="seg-stat-label">Avg rating</div>
+          <div class="seg-stat-value" style="color:#3ec9dc;">4.55</div>
+        </div>
+        <div class="seg-stat">
+          <div class="seg-stat-label">Avg reviews</div>
+          <div class="seg-stat-value">4,278</div>
+        </div>
+        <div class="seg-stat" style="grid-column:1/-1;">
+          <div class="seg-stat-label">Avg price</div>
+          <div class="seg-stat-value">$170.25</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="segment-card">
+      <div class="segment-card-header">
+        <span class="seg-dot" style="background:#8b9ff0;"></span>
+        <span class="seg-name">Mid-tier / lower satisfaction</span>
+      </div>
+      <div class="seg-count">13 brands</div>
+      <div class="seg-stats">
+        <div class="seg-stat">
+          <div class="seg-stat-label">Avg rating</div>
+          <div class="seg-stat-value" style="color:#8b9ff0;">4.17</div>
+        </div>
+        <div class="seg-stat">
+          <div class="seg-stat-label">Avg reviews</div>
+          <div class="seg-stat-value">3,755</div>
+        </div>
+        <div class="seg-stat" style="grid-column:1/-1;">
+          <div class="seg-stat-label">Avg price</div>
+          <div class="seg-stat-value">$115.57</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="table-section">
+  <div class="table-header-row">
+    <span class="table-title">Brand detail</span>
+    <span class="table-count" id="tableCount">31 brands</span>
+  </div>
+  <div class="table-scroll">
+    <table>
+      <thead>
+        <tr>
+          <th>Brand</th>
+          <th>Products</th>
+          <th>Avg rating</th>
+          <th>Total reviews</th>
+          <th>Avg price</th>
+          <th>Segment</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+const data = [
+  {brand:"100stem",product_count:5,avg_rating:4.28,total_reviews:8357,avg_price:67.99,segment:"Mid-Tier / Lower Satisfaction"},
+  {brand:"50stem",product_count:6,avg_rating:3.88,total_reviews:24452,avg_price:49.99,segment:"Mid-Tier / Lower Satisfaction"},
+  {brand:"boulder clean",product_count:5,avg_rating:4.30,total_reviews:511,avg_price:26.79,segment:"Mid-Tier / Lower Satisfaction"},
+  {brand:"chicago steak",product_count:11,avg_rating:4.56,total_reviews:2417,avg_price:240.90,segment:"Premium High-Quality"},
+  {brand:"chocolate covered",product_count:5,avg_rating:4.00,total_reviews:67,avg_price:55.99,segment:"Mid-Tier / Lower Satisfaction"},
+  {brand:"coastal seafood",product_count:5,avg_rating:3.80,total_reviews:844,avg_price:195.99,segment:"Mid-Tier / Lower Satisfaction"},
+  {brand:"crescent foods",product_count:5,avg_rating:4.50,total_reviews:216,avg_price:165.99,segment:"Premium High-Quality"},
+  {brand:"dartagnan",product_count:5,avg_rating:4.10,total_reviews:2230,avg_price:297.99,segment:"Mid-Tier / Lower Satisfaction"},
+  {brand:"davids cookies",product_count:12,avg_rating:4.43,total_reviews:16737,avg_price:50.82,segment:"Premium High-Quality"},
+  {brand:"ecos he",product_count:6,avg_rating:4.67,total_reviews:6864,avg_price:38.99,segment:"Premium High-Quality"},
+  {brand:"ferraras bakery",product_count:8,avg_rating:3.98,total_reviews:1386,avg_price:80.99,segment:"Mid-Tier / Lower Satisfaction"},
+  {brand:"g2g",product_count:5,avg_rating:4.86,total_reviews:679,avg_price:45.99,segment:"Premium High-Quality"},
+  {brand:"japanese wagyu",product_count:6,avg_rating:4.53,total_reviews:2193,avg_price:628.32,segment:"Premium High-Quality"},
+  {brand:"kirkland signature",product_count:281,avg_rating:4.60,total_reviews:63714,avg_price:20.68,segment:"Mass-Market Dominant"},
+  {brand:"made in nature",product_count:7,avg_rating:4.51,total_reviews:6281,avg_price:45.42,segment:"Premium High-Quality"},
+  {brand:"nellies",product_count:18,avg_rating:4.56,total_reviews:10152,avg_price:68.21,segment:"Premium High-Quality"},
+  {brand:"no sugar",product_count:6,avg_rating:4.05,total_reviews:713,avg_price:42.99,segment:"Mid-Tier / Lower Satisfaction"},
+  {brand:"northfork bison",product_count:6,avg_rating:4.37,total_reviews:688,avg_price:134.99,segment:"Premium High-Quality"},
+  {brand:"northwest fish",product_count:19,avg_rating:4.20,total_reviews:6305,avg_price:216.83,segment:"Mid-Tier / Lower Satisfaction"},
+  {brand:"peets coffee",product_count:7,avg_rating:4.70,total_reviews:1139,avg_price:39.56,segment:"Premium High-Quality"},
+  {brand:"plaza golden",product_count:6,avg_rating:4.73,total_reviews:698,avg_price:573.32,segment:"Premium High-Quality"},
+  {brand:"plaza osetra",product_count:8,avg_rating:4.57,total_reviews:7868,avg_price:276.24,segment:"Premium High-Quality"},
+  {brand:"rastelli",product_count:5,avg_rating:4.52,total_reviews:1112,avg_price:217.99,segment:"Premium High-Quality"},
+  {brand:"rastelli usda",product_count:5,avg_rating:4.18,total_reviews:3388,avg_price:215.99,segment:"Mid-Tier / Lower Satisfaction"},
+  {brand:"ruta maya",product_count:7,avg_rating:4.73,total_reviews:11924,avg_price:45.85,segment:"Premium High-Quality"},
+  {brand:"san francisco",product_count:6,avg_rating:4.64,total_reviews:4794,avg_price:40.49,segment:"Premium High-Quality"},
+  {brand:"starbucks",product_count:5,avg_rating:4.50,total_reviews:1911,avg_price:32.79,segment:"Premium High-Quality"},
+  {brand:"the unscented company",product_count:12,avg_rating:4.14,total_reviews:520,avg_price:52.66,segment:"Mid-Tier / Lower Satisfaction"},
+  {brand:"tre olive",product_count:5,avg_rating:4.80,total_reviews:379,avg_price:65.99,segment:"Premium High-Quality"},
+  {brand:"tsar nicoulai",product_count:15,avg_rating:4.35,total_reviews:2972,avg_price:144.66,segment:"Premium High-Quality"},
+  {brand:"50stem flowers",product_count:6,avg_rating:3.88,total_reviews:24452,avg_price:49.99,segment:"Mid-Tier / Lower Satisfaction"}
+];
+
+const unique = [];
+const seen = new Set();
+data.forEach(d => { if (!seen.has(d.brand)) { seen.add(d.brand); unique.push(d); } });
+
+const segColors = {
+  "Mass-Market Dominant": "#5ba3e8",
+  "Premium High-Quality": "#3ec9dc",
+  "Mid-Tier / Lower Satisfaction": "#8b9ff0"
+};
+
+const badgeClass = {
+  "Mass-Market Dominant": "badge-mass",
+  "Premium High-Quality": "badge-premium",
+  "Mid-Tier / Lower Satisfaction": "badge-mid"
+};
+
+let currentFilter = 'all';
+
+function getDatasets(filter) {
+  const segs = ["Mass-Market Dominant","Premium High-Quality","Mid-Tier / Lower Satisfaction"];
+  return segs.map(seg => {
+    const filtered = unique.filter(d => (filter === 'all' || d.segment === filter) && d.segment === seg);
+    return {
+      label: seg,
+      data: filtered.map(d => ({
+        x: d.total_reviews,
+        y: d.avg_rating,
+        r: Math.max(5, Math.sqrt(d.product_count) * 4.5),
+        brand: d.brand,
+        product_count: d.product_count,
+        avg_price: d.avg_price
+      })),
+      backgroundColor: segColors[seg] + "88",
+      borderColor: segColors[seg],
+      borderWidth: 1.5
+    };
+  });
+}
+
+const ctx = document.getElementById('bubbleChart').getContext('2d');
+const chart = new Chart(ctx, {
+  type: 'bubble',
+  data: { datasets: getDatasets('all') },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: '#2b2f36',
+        borderColor: 'rgba(255,255,255,0.1)',
+        borderWidth: 1,
+        titleColor: '#e8f4fd',
+        bodyColor: '#9bbcd4',
+        titleFont: { family: 'Nunito', size: 13, weight: '700' },
+        bodyFont: { family: 'Nunito Sans', size: 12 },
+        padding: 12,
+        callbacks: {
+          title: ctx => ctx[0].raw.brand.replace(/\b\w/g, c => c.toUpperCase()),
+          label: ctx => {
+            const d = ctx.raw;
+            return [
+              'Reviews: ' + d.x.toLocaleString(),
+              'Rating: ' + d.y.toFixed(2),
+              'Products: ' + d.product_count,
+              'Avg price: $' + d.avg_price.toFixed(2)
+            ];
+          }
+        }
+      }
+    },
+    scales: {
+      x: {
+        title: { display: true, text: 'Total reviews', color: '#7aaac8', font: { family: 'Nunito Sans', size: 11 } },
+        ticks: { color: '#7aaac8', font: { family: 'Nunito Sans', size: 10 }, callback: v => v >= 1000 ? (v/1000).toFixed(0)+'k' : v },
+        grid: { color: 'rgba(255,255,255,0.06)' },
+        border: { color: 'rgba(255,255,255,0.08)' },
+        min: -1000,
+        max: 70000
+      },
+      y: {
+        title: { display: true, text: 'Avg rating', color: '#7aaac8', font: { family: 'Nunito Sans', size: 11 } },
+        ticks: { color: '#7aaac8', font: { family: 'Nunito Sans', size: 10 } },
+        grid: { color: 'rgba(255,255,255,0.06)' },
+        border: { color: 'rgba(255,255,255,0.08)' },
+        min: 3.5,
+        max: 5.1
+      }
+    }
+  }
+});
+
+function setFilter(f) {
+  currentFilter = f;
+  chart.data.datasets = getDatasets(f);
+  chart.update();
+  renderTable(f);
+
+  document.querySelectorAll('.filter-btn').forEach(b => {
+    b.className = 'filter-btn';
+  });
+  const map = { 'all': ['btn-all','active-all'], 'Mass-Market Dominant': ['btn-mass','active-mass'], 'Premium High-Quality': ['btn-premium','active-premium'], 'Mid-Tier / Lower Satisfaction': ['btn-mid','active-mid'] };
+  const [id, cls] = map[f];
+  document.getElementById(id).classList.add(cls);
+}
+
+function renderTable(filter) {
+  const filtered = unique.filter(d => filter === 'all' || d.segment === filter)
+    .sort((a,b) => b.total_reviews - a.total_reviews);
+  document.getElementById('tableCount').textContent = filtered.length + ' brand' + (filtered.length !== 1 ? 's' : '');
+  const ratingRange = [3.5, 5.0];
+  document.getElementById('tableBody').innerHTML = filtered.map(d => {
+    const pct = ((d.avg_rating - ratingRange[0]) / (ratingRange[1] - ratingRange[0]) * 100).toFixed(1);
+    const col = segColors[d.segment];
+    return `<tr>
+      <td>${d.brand}</td>
+      <td>${d.product_count}</td>
+      <td>
+        <div class="rating-bar-wrap">
+          <span style="font-family:'Nunito Sans',sans-serif;font-size:12px;">${d.avg_rating.toFixed(2)}</span>
+          <div class="rating-bar"><div class="rating-bar-fill" style="width:${pct}%;background:${col};"></div></div>
+        </div>
+      </td>
+      <td>${d.total_reviews.toLocaleString()}</td>
+      <td>$${d.avg_price.toFixed(2)}</td>
+      <td><span class="badge ${badgeClass[d.segment]}">${d.segment}</span></td>
+    </tr>`;
+  }).join('');
+}
+
+renderTable('all');
+</script>
+</body>
+</html>
