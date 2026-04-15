@@ -3,7 +3,7 @@
 
 EDA on a webscraped Costco dataset using a variety of python libraries such as plotly for interactive, dashboard visualizations; re for Natural Language Processing, and techniques such as K-means clustering to gather insights on Customer Engagement, Product Market Share and Pricing Statistics.
 
-### **to run dashboards, download the file and open in a browser of choice**
+
 ### Final Grocery_EDA_Report.ipynb:
 A Jupyter Notebook containing all coding semantics, descriptions and design decisions on the project's EDA.
 
@@ -13,6 +13,7 @@ Raw, uncleaned, dataset scraped from Costco's online website. Done by user elvin
 ### brands.csv:
 GroceryDataset.csv after all cleaning and manipulations for Brand Clustering and further Brand Segmentation Analysis.
 
+#### (**to run dashboards, download the file and open in a browser of choice**)
 ### Grocery_catalogue_dashboard:
 The primary dashboard delving into insights such as Attention Gaps, Review Concentration and Top Product Lines using various Plotly visualizations.
 
