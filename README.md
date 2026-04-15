@@ -13,7 +13,7 @@ Raw, uncleaned, dataset scraped from Costco's online website. Done by user elvin
 ### brands.csv:
 GroceryDataset.csv after all cleaning and manipulations for Brand Clustering and further Brand Segmentation Analysis.
 
-#### (**to run dashboards, download the file and open in a browser of choice**)
+#### (**to run the following dashboards, download the file and open in a browser of choice**)
 ### Grocery_catalogue_dashboard:
 The primary dashboard delving into insights such as Attention Gaps, Review Concentration and Top Product Lines using various Plotly visualizations.
 
