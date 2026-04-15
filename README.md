@@ -14,7 +14,7 @@ ________________________________________________________________________________
 Raw, uncleaned, dataset scraped from Costco's online website. Done by user elvinrustam on Kaggle. https://www.kaggle.com/datasets/elvinrustam/grocery-dataset
 
 ### brands.csv:
-GroceryDataset.csv after all cleaning and manipulations for Brand Clustering and further Brand Segmentation Analysis.
+GroceryDataset.csv after all cleaning and aggregation manipulations for Brand Clustering and further Brand Segmentation Analysis.
 _____________________________________________________________________________________________________________
 ## Dashboards:
 --------------
