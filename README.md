@@ -23,6 +23,6 @@ ________________________________________________________________________________
 The primary dashboard delving into insights such as Attention Gaps, Review Concentration and Top Product Lines using various Plotly visualizations.
 
 ### brand_segmentation_dashboard:
-An interactive hmtl dashboard diving further into brand clustering insights.
+An interactive html dashboard diving further into brand clustering insights.
 
 
